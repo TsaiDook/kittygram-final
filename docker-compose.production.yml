@@ -1,46 +1,33 @@
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:13
-    env_file:
-      - .env
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  backend:
-    build: ./backend
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-    volumes:
-      - static:/app/static
-      - media:/app/media
-    ports:
-      - "8000:8000"
-
-  frontend:
-    build: ./frontend
-    volumes:
-      - static:/usr/share/nginx/html/static
-    ports:
-      - "3000:3000"
-
-  gateway:
-    build: ./nginx
-    volumes:
-      - static:/usr/share/nginx/html/static
-      - media:/usr/share/nginx/html/media
-    ports:
-      - "9000:80"
-    depends_on:
-      - backend
-      - frontend
+version: '3'
 
 volumes:
+  pg_data:
   static:
   media:
-  pg_data:
+
+services:
+  db:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgres/data
+  backend:
+    image: izmodizm/kittygram_backend
+    env_file: .env
+    volumes:
+      - static:/static/
+      - media:/app/media/
+  frontend:
+    env_file: .env
+    image: izmodizm/kittygram_frontend
+    command: cp -r /app/build/. /static/
+    volumes:
+      - static:/static
+  gateway:
+    image: izmodizm/kittygram_gateway
+    env_file: .env
+    ports:
+      - 9000:80
+    volumes:
+      - static:/static
+      - media:/app/media/
