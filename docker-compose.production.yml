@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   pg_data:
   static:
@@ -10,24 +8,33 @@ services:
     image: postgres:13
     env_file: .env
     volumes:
-      - pg_data:/var/lib/postgres/data
+      - pg_data:/var/lib/postgresql/data
+
   backend:
-    image: shunyabo/kittygram_backend
+    image: izmodizm/kittygram_backend
     env_file: .env
     volumes:
       - static:/static/
       - media:/app/media/
+    depends_on:
+      - db
+
   frontend:
+    image: izmodizm/kittygram_frontend
     env_file: .env
-    image: shunyabo/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
+    depends_on:
+      - backend
+
   gateway:
-    image: shunyabo/kittygram_gateway
+    image: izmodizm/kittygram_gateway
     env_file: .env
     ports:
       - 9000:80
     volumes:
       - static:/static
       - media:/app/media/
+    depends_on:
+      - frontend
