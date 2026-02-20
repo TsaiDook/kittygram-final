@@ -34,7 +34,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3.11-dev build-essential libjpeg-dev zlib1g-dev \
+          sudo apt install -y build-essential libjpeg-dev zlib1g-dev \
               libtiff-dev libfreetype6-dev liblcms2-dev libwebp-dev \
               tcl8.6-dev tk8.6-dev libharfbuzz-dev libfribidi-dev libxcb1-dev
 
