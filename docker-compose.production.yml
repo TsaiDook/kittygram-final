@@ -6,28 +6,28 @@ volumes:
   media:
 
 services:
+  db:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgres/data
   backend:
-    image: izmodizm/kittygram_backend:latest
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-    depends_on:
-      - db
-
+    image: shunyabo/kittygram_backend
+    env_file: .env
+    volumes:
+      - static:/static/
+      - media:/app/media/
   frontend:
-    image: izmodizm/kittygram_frontend:latest
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
+    env_file: .env
+    image: shunyabo/kittygram_frontend
+    command: cp -r /app/build/. /static/
+    volumes:
+      - static:/static
   gateway:
-    image: izmodizm/kittygram_gateway:latest
+    image: shunyabo/kittygram_gateway
+    env_file: .env
     ports:
-      - "9000:80"
-    depends_on:
-      - frontend
+      - 9000:80
+    volumes:
+      - static:/static
+      - media:/app/media/
