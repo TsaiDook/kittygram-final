@@ -1,3 +1,5 @@
+version: '3.9'
+
 volumes:
   pg_data:
   static:
@@ -14,15 +16,19 @@ services:
     image: izmodizm/kittygram_backend
     env_file: .env
     volumes:
-      - static:/static/
-      - media:/app/media/
+      - static:/static
+      - media:/app/media
     depends_on:
       - db
+    ports:
+      - 8000:8000
 
-  frontend:
+  frontend_build:
     image: izmodizm/kittygram_frontend
     env_file: .env
-    command: cp -r /app/build/. /static/
+    command: >
+      sh -c "npm run build &&
+             cp -r /app/build/. /static/"
     volumes:
       - static:/static
     depends_on:
@@ -35,6 +41,6 @@ services:
       - 9000:80
     volumes:
       - static:/static
-      - media:/app/media/
+      - media:/app/media
     depends_on:
-      - frontend
+      - backend

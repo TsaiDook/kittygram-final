@@ -11,4 +11,4 @@ RUN npm install --global http-server
 
 EXPOSE 8000
 
-CMD ["http-server", "/app/build", "-p", "8000"]
+CMD ["npx", "http-server", "/app/build", "-p", "8000", "-c-1"]
