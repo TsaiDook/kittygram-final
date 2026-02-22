@@ -13,24 +13,24 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    image: izmodizm/kittygram_backend
+    build: ./backend/
     env_file: .env
     volumes:
       - static:/backend_static
       - media:/app/media
 
   frontend:
-    image: izmodizm/kittygram_frontend
     env_file: .env
+    build: ./frontend/
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
   gateway:
-    image: izmodizm/kittygram_gateway
+    build: ./nginx/
     env_file: .env
     ports:
-      - 9000:80
+      - 8000:80
     volumes:
       - static:/static
       - media:/media
