@@ -15,6 +15,8 @@ services:
   backend:
     image: izmodizm/kittygram_backend
     env_file: .env
+    depends_on:
+      - db
     volumes:
       - static:/backend_static
       - media:/app/media
@@ -29,6 +31,8 @@ services:
   gateway:
     image: izmodizm/kittygram_gateway
     env_file: .env
+    depends_on:
+      - backend
     ports:
       - 9000:80
     volumes:
